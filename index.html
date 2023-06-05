@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PEG-774-Test</title>
+    <script src="https://staxjs.staxpayments.com/stax.js"></script>
+  </head>
+  <body>
+    <h1>Hello World!</h1>
+
+    <button id="pay-ocr">Pay With OCR</button>
+
+    <form id="your-stax-form-id">
+      <input type="number" name="card-number" id="card-number" />
+      <input type="text" id="card-cvv" />
+    </form>
+
+    <script>
+      var staxjs = new StaxJs("Test-57c1c84f2c44", {
+        number: {
+          id: "card-number", // the html id of the div you want to contain the credit card number field
+          placeholder: "0000 0000 0000 0000", // the placeholder the field should contain
+          style: "height: 30px; width: 100%; font-size: 15px;", // the style to apply to the field
+          type: "text", // the input type (optional)
+          format: "prettyFormat", // the formatting of the CC number (prettyFormat || plainFormat || maskedFormat)
+        },
+        cvv: {
+          id: "card-cvv", // the html id of the div you want to contain the cvv field
+          placeholder: "CVV", // the placeholder the field should contain
+          style: "height: 30px; width: 100%; font-size: 15px;", // the style to apply to the field
+          type: "text", // the input type (optional)
+        },
+        ocr: {
+          key: "sRwAAAYJbG9jYWxob3N0r/lOPgo/w35CpOGmK2o7Zbxh7/4aO+2zHIeBulBubaZ52Sr4UEQAqlqKuA14+k//b8ea/DCV+N4hlhUgL8R93W2FMrVoYVlIBUVjh13qFU5s7ziADBI6XHyDfiKJhUouXIj8l05/iUK4sUlUUiPV3VD0BAaCtqdW55Kjmq+xbVjNtgmJ2wV8OxM=",
+        },
+        api_endpoint: 'localhost'
+      });
+
+      var payOcr = document.querySelector("#pay-ocr");
+
+      document.querySelector("#pay-ocr").onclick = function () {
+        staxjs.ocr({ formId: "your-stax-form-id" });
+      };
+
+      staxjs.on("ocr_enabled", function (message) {
+        payOcr.style.display = "block";
+        console.log(message);
+      });
+
+      staxjs.on("ocr_initiated", function (message) {
+        console.log(message);
+      });
+
+      staxjs.on("ocr_error", function (message) {
+        console.log(message);
+      });
+
+      staxjs.on("ocr_success", function (message) {
+        console.log(message);
+      });
+
+      staxjs.on("ocr_tokenized", function (message) {
+        console.log(message);
+      });
+
+      staxjs.on("ocr_flip", function (message) {
+        alert("Flip the card");
+        console.log(message);
+      });
+
+      staxjs
+        .showCardForm()
+        .then((handler) => {
+          console.log("form was loaded");
+          // for quick testing, you can set a test number and test cvv here
+          // handler.setTestPan("4111111111111111");
+          // handler.setTestCvv("123");
+        })
+        .catch((err) => {
+          console.log("there was an error loading the form: ", err);
+        });
+    </script>
+  </body>
+</html>
